@@ -1,202 +1,542 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Головна сторінка</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<!-- Taskbar -->
-<div class="taskbar">
-    <div class="icons">
-        <div class="icons-left">
-            <a href="#start-menu-modal" id="start-menu"><i class="fab fa-windows"></i></a>
-            <a href="#search" id="search"></a>
-            <a href="#tabs" id="tabs-windows"></a>
-            <a href="#" class="px"></a>
-            <a href="#folder" id="folder" class="border"></a>
-            <a href="#chrome-pop-up" id="chrome" class="border"></a>
-        </div>
-        <div class="icons-right">
-            <a href="#up" id="up" class="small-icons"><i class="fas fa-chevron-up"></i></a>
-            <a href="#sound-modal" id="sound" class="small-icons"></a>
-            <a href="#wifi-modal" id="wifi" class="small-icons"></a>
-            <div class="datetime">
-                <span class="hour">17:44</span>
-                <span class="date">25/11/2022</span>
-            </div>
-            <a href="#notifications" id="notifications"><i class="far fa-bell"></i></a>
-            <a href="#" class="clear disabled"></a>
-            <a href="#" id="return"></a>
-        </div>
-    </div>
-</div>
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Desktop</title>
+      <link rel="stylesheet" href="styles.css" />
+      <style>
+         /* Додаємо на початку стилів */
+         html,
+         body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+         }
 
-<!-- Desktop -->
-<div class="desktop">
-    <!-- Icons on the desktop -->
-    <div class="icons-dekstop">
-        <div class="icon-desktop">
-            <a href="#chrome-pop-up">
-                <img src="/Internet_Explorer_10+11_logo.svg" alt="">
-                <span>Explorer</span>
-            </a>
-        </div>
-        <div class="icon-desktop">
-            <a href="#">
-                <img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/code.png" alt="">
-                <span>Code</span>
-            </a>
-        </div>
-        <div class="icon-desktop">
-            <a href="#"><img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/file-explorer.png" alt=""><span>File Explorer</span></a>
-        </div>
-        <div class="icon-desktop">
-            <a href="#"><img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/word.png" alt=""><span>Recycle bin</span></a>
-        </div>
-    </div>
+         body {
+            background: #0078d4; /* Windows 10 default background color */
+            min-height: 100vh;
+            position: relative;
+         }
 
-    <!-- Speakers -->
-    <div id="sound-modal">
-        <div class="sound-text">
-            <span>Speakers</span>
-        </div>
-        <div class="sound-progress">
-            <i class="fas fa-volume-up"></i>
-            <div class="bar-sound"></div>
-            <div class="bar-sound-drag"></div>
-            <span class="data-value">50%</span>
-        </div>
-    </div>
+         .desktop {
+            width: 100%;
+            height: calc(100vh - 40px); /* Висота екрану мінус висота taskbar */
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow: auto;
+            padding: 20px;
+            box-sizing: border-box;
+         }
 
-    <!-- Wifi -->
-    <div id="wifi-modal">
-        <div class="list-networks">
-            <div class="networks">
-                <div class="icons-wifi">
-                    <i class="fas fa-wifi"></i>
-                </div>
-                <div class="text-wifi">
-                    <span class="name-wifi">Wifi</span>
-                    <span class="type-wifi">Connected, securised</span>
-                    <span class="propriety">Propriety</span>
-                    <button>Disconnect</button>
-                </div>
+         .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+         }
+
+         /* Адаптивність для мобільних пристроїв */
+         @media (max-width: 768px) {
+            .icons-dekstop {
+               display: grid;
+               grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+               gap: 20px;
+               padding: 10px;
+            }
+
+            .icon-desktop {
+               width: 100%;
+               text-align: center;
+            }
+
+            .chrome {
+               width: 100% !important;
+               height: 100vh !important;
+               max-width: none !important;
+            }
+
+            .search-window {
+               width: 90%;
+               left: 50%;
+               transform: translateX(-50%);
+            }
+         }
+
+         .chrome {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            z-index: 1000;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+         }
+
+         .chrome:target {
+            display: block;
+         }
+
+         .pop-up {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+         }
+
+         /* Стилі для верхньої частини вікна */
+         .chrome-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f1f1f1;
+            padding: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+         }
+
+         .chrome-tabs {
+            display: flex;
+            align-items: center;
+            flex: 1;
+         }
+
+         .tabs {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-right: 5px;
+         }
+
+         .chrome-close {
+            display: flex;
+            gap: 10px;
+            padding: 0 10px;
+         }
+
+         .chrome-close a {
+            color: #666;
+            text-decoration: none;
+         }
+
+         .chrome-close a:hover {
+            color: #000;
+         }
+
+         /* Стилі для нижньої частини вікна */
+         .chrome-bottom {
+            background: white;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+         }
+
+         .options-bar {
+            display: flex;
+            flex-direction: column;
+         }
+
+         .icons-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px;
+         }
+
+         .search-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #f1f1f1;
+            padding: 5px 10px;
+            border-radius: 15px;
+         }
+
+         .search-bar input {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 5px;
+            margin: 0 5px;
+         }
+
+         /* Стилі для стартової кнопки */
+         #startup-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.2s;
+         }
+
+         #startup-button:hover {
+            transform: scale(1.1);
+         }
+
+         #startup-button:active {
+            transform: scale(0.95);
+         }
+
+         .power-button-image {
+            width: 50px;
+            height: 50px;
+            filter: brightness(1.2);
+         }
+
+         /* Стилі для модального вікна запуску */
+         .startup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+         }
+
+         .startup-modal-content {
+            text-align: center;
+            padding: 20px;
+         }
+
+         .startup-image {
+            max-width: 200px;
+            margin-bottom: 20px;
+         }
+
+         .startup-text {
+            color: white;
+            font-size: 24px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+         }
+
+         .search-window {
+            display: none;
+            position: fixed;
+            bottom: 50px; /* Відступ від низу екрану */
+            left: 60px; /* Вирівнювання з кнопкою пошуку */
+            width: 400px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1100;
+            animation: slideUp 0.2s ease-out;
+         }
+
+         @keyframes slideUp {
+            from {
+               transform: translateY(20px);
+               opacity: 0;
+            }
+            to {
+               transform: translateY(0);
+               opacity: 1;
+            }
+         }
+
+         .search-window:target {
+            display: block;
+         }
+
+         .search-container {
+            padding: 15px;
+         }
+
+         .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+         }
+
+         .close-search {
+            color: #666;
+            text-decoration: none;
+            font-size: 20px;
+            padding: 5px;
+         }
+
+         .close-search:hover {
+            color: #000;
+         }
+
+         .search-input-container {
+            position: relative;
+         }
+
+         .search-input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+         }
+
+         .search-input:focus {
+            border-color: #0078d4;
+         }
+
+         .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+         }
+      </style>
+   </head>
+   <body>
+      <!-- Taskbar -->
+      <div class="taskbar">
+         <div class="icons">
+            <div class="icons-left">
+               <a href="#start-menu-modal" id="start-menu"
+                  ><i class="fab fa-windows"></i
+               ></a>
+               <a href="#search" id="search"></a>
+               <!-- <a href="#tabs" id="tabs-windows"></a> -->
+               <a href="#" class="px"></a>
+               <a href="#deepseek-pop-up" id="folder" class="border"></a>
+               <a href="#explorer-pop-up" id="chrome" class="border"></a>
             </div>
-            <div class="networks">
-                <div class="icons-wifi">
-                    <i class="fas fa-wifi"></i>
-                </div>
-                <span class="name-wifi">Wifi</span>
-                <span class="type-wifi">Open</span>
+            <div class="icons-right">
+               <a href="#up" id="up" class="small-icons"
+                  ><i class="fas fa-chevron-up"></i
+               ></a>
+               <a href="#sound-modal" id="sound" class="small-icons"></a>
+               <a href="#wifi-modal" id="wifi" class="small-icons"></a>
+               <div class="datetime">
+                  <span class="hour">17:44</span>
+                  <span class="date">29/01/2025</span>
+               </div>
+               <a href="#notifications" id="notifications"
+                  ><i class="far fa-bell"></i
+               ></a>
+               <a href="#" class="clear disabled"></a>
+               <a href="#" id="return"></a>
             </div>
-            <div class="networks">
-                <div class="icons-wifi">
-                    <i class="fas fa-wifi"></i>
-                </div>
-                <span class="name-wifi">Wifi</span>
-                <span class="type-wifi">Open</span>
+         </div>
+      </div>
+
+      <!-- Desktop -->
+      <div class="desktop">
+         <!-- Icons on the desktop -->
+         <div class="icons-dekstop">
+            <div class="icon-desktop">
+               <a href="#explorer-pop-up">
+                  <img src="/Internet_Explorer_10+11_logo.svg" alt="" />
+                  <span>Explorer</span>
+               </a>
             </div>
-            <div class="options-wifi">
-                <div class="options-wifi-text">
-                    <span>Options internet & security</span>
-                    <span>Modify options, for a better connection</span>
-                </div>
-                <div class="options-bloc">
-                    <div class="bloc-options">
+            <div class="icon-desktop">
+               <a href="https://web.telegram.org/">
+                  <img
+                     src="Telegram_logo.svg"
+                     alt=""
+                  />
+                  <span>Telegram</span>
+               </a>
+            </div>
+            <div class="icon-desktop">
+               <a href="https://x.com/"
+                  ><img
+                     src="X_logo_2023.svg"
+                     alt=""
+                  /><span>X</span></a
+               >
+            </div>
+            <div class="icon-desktop">
+               <a href="#deepseek-pop-up"
+                  ><img
+                     src="2.svg"
+                     alt=""
+                  /><span>Deepseek</span></a
+               >
+            </div>
+         </div>
+
+         <!-- Speakers -->
+         <div id="sound-modal">
+            <div class="sound-text">
+               <span>Speakers</span>
+            </div>
+            <div class="sound-progress">
+               <i class="fas fa-volume-up"></i>
+               <div class="bar-sound"></div>
+               <div class="bar-sound-drag"></div>
+               <span class="data-value">50%</span>
+            </div>
+         </div>
+
+         <!-- Wifi -->
+         <div id="wifi-modal">
+            <div class="list-networks">
+               <div class="networks">
+                  <div class="icons-wifi">
+                     <i class="fas fa-wifi"></i>
+                  </div>
+                  <div class="text-wifi">
+                     <span class="name-wifi">Wifi</span>
+                     <span class="type-wifi">Connected, securised</span>
+                     <span class="propriety">Propriety</span>
+                     <button>Disconnect</button>
+                  </div>
+               </div>
+               <div class="networks">
+                  <div class="icons-wifi">
+                     <i class="fas fa-wifi"></i>
+                  </div>
+                  <span class="name-wifi">Wifi</span>
+                  <span class="type-wifi">Open</span>
+               </div>
+               <div class="networks">
+                  <div class="icons-wifi">
+                     <i class="fas fa-wifi"></i>
+                  </div>
+                  <span class="name-wifi">Wifi</span>
+                  <span class="type-wifi">Open</span>
+               </div>
+               <div class="options-wifi">
+                  <div class="options-wifi-text">
+                     <span>Options internet & security</span>
+                     <span>Modify options, for a better connection</span>
+                  </div>
+                  <div class="options-bloc">
+                     <div class="bloc-options">
                         <i class="fas fa-wifi"></i>
                         <span>Wifi</span>
-                    </div>
-                    <div class="bloc-options">
+                     </div>
+                     <div class="bloc-options">
                         <i class="fas fa-plane"></i>
                         <span>Plane mode</span>
-                    </div>
-                    <div class="bloc-options">
+                     </div>
+                     <div class="bloc-options">
                         <i class="fab fa-bluetooth-b"></i>
                         <span>Bluetooth</span>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-</div>
+         </div>
+      </div>
 
-<!-- Chrome -->
-<div class="chrome" id="chrome-pop-up">
-    <div class="pop-up">
-        <!-- Taskbar chrome-->
-        <!-- Top -->
-        <div class="chrome-top">
-            <div class="chrome-tabs">
-                <div class="triangle"></div>
-                <div class="tabs">
-                        <span class="icons-tabs">
-                            <i class="fab fa-codepen"></i>
-                        </span>
-                    <span class="text-tabs">Site name</span>
-                    <span class="close-tabs">x</span>
-                </div>
-                <div class="triangle-2"></div>
-                <div class="new-tabs"></div>
+      <!-- Chrome -->
+      <div class="chrome" id="explorer-pop-up">
+         <div class="pop-up">
+            <!-- Taskbar chrome-->
+            <!-- Top -->
+            <div class="chrome-top">
+               <div class="chrome-tabs">
+                  <div class="triangle"></div>
+                  <div class="tabs">
+                     <span class="icons-tabs">
+                        <i class="fab fa-codepen"></i>
+                     </span>
+                     <span class="text-tabs">Site name</span>
+                     <span class="close-tabs">x</span>
+                  </div>
+                  <div class="triangle-2"></div>
+                  <div class="new-tabs"></div>
+               </div>
+               <div class="chrome-close">
+                  <a href="#"><i class="fas fa-minus"></i></a>
+                  <a href="#"><i class="far fa-window-restore"></i></a>
+                  <a href="#"><i class="fas fa-times"></i></a>
+               </div>
             </div>
-            <div class="chrome-close">
-                <a href="#"><i class="fas fa-minus"></i></a>
-                <a href="#"><i class="far fa-window-restore"></i></a>
-                <a href="#"><i class="fas fa-times"></i></a>
-            </div>
-        </div>
-        <!-- Bottom -->
-        <div class="chrome-bottom">
-            <div class="options-bar">
-                <div class="icons-bar">
-                    <div class="arrows">
+            <!-- Bottom -->
+            <div class="chrome-bottom">
+               <div class="options-bar">
+                  <div class="icons-bar">
+                     <div class="arrows">
                         <a href="#"><i class="fas fa-arrow-left"></i></a>
                         <a href="#"><i class="fas fa-arrow-right"></i></a>
                         <a href="#"><i class="fas fa-sync"></i></a>
-                    </div>
-                    <div class="search-bar">
-                        <span class="info"><i class="fas fa-lock"></i> Securised</span>
-                        <input type="text" value="https://link.io/">
+                     </div>
+                     <div class="search-bar">
+                        <span class="info"
+                           ><i class="fas fa-lock"></i> Securised</span
+                        >
+                        <input type="text" value="https://deepie.website" />
                         <span class="star"><i class="far fa-star"></i></span>
-                    </div>
-                    <div class="points-bar">
+                     </div>
+                     <div class="points-bar">
                         <div class="points">
-                            <span>•</span>
-                            <span>•</span>
-                            <span>•</span>
+                           <span>•</span>
+                           <span>•</span>
+                           <span>•</span>
                         </div>
-                    </div>
-                </div>
-                <div class="bookmarks">
-                    <div class="folder-book">
-                        <a target="_blank" href="https://purecss.io/"><span>P</span> Pure</a>
-                    </div>
-                    <div class="folder-book">
-                        <a target="_blank" href="https://developer.mozilla.org/fr/docs/Web/CSS"><i class="fab fa-css3-alt"></i> CSS</a>
-                    </div>
-                    <div class="folder-book">
-                        <a target="_blank" href="https://www.microsoft.com/fr-fr/windows"><i class="fab fa-windows"></i> Windows 10</a>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+                  <div class="bookmarks">
+                     <div class="folder-book">
+                        <a target="_blank" href="https://purecss.io/"
+                           ><span>P</span> Pure</a
+                        >
+                     </div>
+                     <div class="folder-book">
+                        <a
+                           target="_blank"
+                           href="https://developer.mozilla.org/fr/docs/Web/CSS"
+                           ><i class="fab fa-css3-alt"></i> CSS</a
+                        >
+                     </div>
+                     <div class="folder-book">
+                        <a
+                           target="_blank"
+                           href="https://www.microsoft.com/fr-fr/windows"
+                           ><i class="fab fa-windows"></i> Windows 10</a
+                        >
+                     </div>
+                  </div>
+               </div>
+               <!-- Bookmarks -->
             </div>
-            <!-- Bookmarks -->
-
-        </div>
-        <div id="startup-modal" class="startup-modal">
-            <div class="startup-modal-content">
-                <img src="image.webp" alt="Windows 95 Logo" class="startup-image"> <!-- Замініть на URL або шлях до вашого зображення -->
-                <p class="startup-text">Enter</p>
-                <button id="startup-button">
-                    <img src="pow.png" alt="Power Button" class="power-button-image"> 
-                </button>
-                <!-- SOON... -->
+            <div id="startup-modal" class="startup-modal">
+               <div class="startup-modal-content">
+                  <img
+                     src="image.webp"
+                     alt="Windows 95 Logo"
+                     class="startup-image"
+                  />
+                  <!-- Замініть на URL або шлях до вашого зображення -->
+                  <p class="startup-text">Enter</p>
+                  <button id="startup-button">
+                     <img
+                        src="pow.png"
+                        alt="Power Button"
+                        class="power-button-image"
+                     />
+                  </button>
+                  <!-- SOON... -->
+               </div>
             </div>
-        </div>
-    <!--  -->
-        <!-- <main class="instagram" ontouchstart=""> -->
+            <!--  -->
+            <!-- <main class="instagram" ontouchstart=""> -->
             <div class="inner">
-                <!-- <header class="bar">
+               <!-- <header class="bar">
                     <h1>Explorer.exe</h1>
                     <div class="buttons">
                         <a class="minimize"></a>
@@ -211,209 +551,331 @@
                         <li><a href="https://x.com/IEisgod" target="_blank">X</a></li>
                     </ul>
                 </nav> -->
-                <div class="container">
-                    <div class="content">
-                        <div class="content-section home">
-                            <div class="feed-type" id="home">
-                                <div class="feed">
-                                    <div id="modal" class="modal">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <span class="modal-title">ERROR</span>
-                                            </div>
-                                            <div class="modal-body">
-                                                <img style="width: 40px;" src="1.png" alt="Error Icon">
-                                                <div id="copy-text">73WjFWHnN6goVHMkUT2EU5wepcgK7oABmZ66mGSedge</div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button id="copy-button">Copy</button>
-                                                <button id="close-modal">Close</button>
-                                            </div>
-                                        </div>
+               <div class="container">
+                  <div class="content">
+                     <div class="content-section home">
+                        <div class="feed-type" id="home">
+                           <div class="feed">
+                              <div id="modal" class="modal">
+                                 <div class="modal-content">
+                                    <div class="modal-header">
+                                       <span class="modal-title">ERROR</span>
                                     </div>
-                                </div>
-                            </div>
+                                    <div class="modal-body">
+                                       <img
+                                          style="width: 40px"
+                                          src="1.png"
+                                          alt="Error Icon"
+                                       />
+                                       <div id="copy-text">
+                                          73WjFWHnN6goVHMkUT2EU5wepcgK7oABmZ66mGSedge
+                                       </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                       <button id="copy-button">Copy</button>
+                                       <button id="close-modal">Close</button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
-                        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                            <div class="address-bar">
-                                <input type="text" id="address" placeholder="type here...">
-                                <button id="search-button" class="search-button">🔍</button>
-                            </div>
+                     </div>
+                     <div
+                        style="
+                           display: flex;
+                           flex-direction: column;
+                           justify-content: center;
+                           align-items: center;
+                        "
+                     >
+                        <div class="address-bar">
+                           <input
+                              type="text"
+                              id="address"
+                              placeholder="type here..."
+                           />
+                           <button id="search-button" class="search-button">
+                              🔍
+                           </button>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        <!-- </main> -->
-    
-        <audio id="startup-music" src="music.mp3" loop></audio>
-    
-        <button id="toggle-music" class="music-button">
-            <p id="vol">volume 100</p>
-        
-            <!-- <img src="speaker.png" alt="Speaker Icon" id="speaker-icon"> Заміна іконки -->
-        </button>
-    
-        <script>
-            // Показати модальне вікно при завантаженні сторінки
-            window.onload = function () {
-                const startupModal = document.getElementById('startup-modal');
-                startupModal.style.display = 'flex';
-    
-                const startupButton = document.getElementById('startup-button');
-                const audio = document.getElementById('startup-music');
-    
-                startupButton.addEventListener('click', function () {
-                    startupModal.style.display = 'none';
-    
-                    // Відтворити музику
-                    audio.play().catch(err => {
-                        console.error('Failed to play audio:', err);
-                    });
-                });
-            };
-    
-            // Кнопка для ввімкнення/вимкнення музики
-            const toggleMusicButton = document.getElementById('toggle-music');
-            const speakerIcon = document.getElementById('speaker-icon');
-            const audio = document.getElementById('startup-music');
-            const vol = document.getElementById('vol');
-    
-            toggleMusicButton.addEventListener('click', function () {
-                if (audio.paused) {
-                    audio.play();
-                    // speakerIcon.src = 'speaker.png'; 
-                    vol.textContent = "volume 100";
-                } else {
-                    audio.pause();
-                    // speakerIcon.src = 'mute.png'; 
-                    vol.textContent = "volume 0";
-                }
-            });
-    
-            // Інші існуючі функції
-            document.getElementById('address').addEventListener('click', function () {
-                document.getElementById('modal').style.display = 'flex';
-            });
-    
-            document.getElementById('close-modal').addEventListener('click', function () {
-                document.getElementById('modal').style.display = 'none';
-            });
-    
-            document.getElementById('search-button').addEventListener('click', function () {
-                document.getElementById('modal').style.display = 'flex';
-            });
-    
-            document.getElementById('copy-button').addEventListener('click', function () {
-                const copyText = document.getElementById('copy-text').textContent;
-    
-                // Копіювання тексту в буфер обміну
-                navigator.clipboard.writeText(copyText).then(() => {
-                    alert('Link copied to clipboard!');
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            });
-        </script>
-    
-        <style>
-            /* Стилі для стартового модального вікна */
-            .startup-modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-            }
-    
-            .startup-modal-content {
-                text-align: center;
-                color: white;
-            }
-    
-            .startup-image {
-                max-width: 200px;
-                margin-bottom: 20px;
-            }
-    
-            .startup-text {
-                font-size: 24px;
-                margin-bottom: 20px;
-                font-family: 'Courier New', Courier, monospace;
-            }
-    
-            .power-button-image {
-                width: 50px;
-                height: 50px;
-                cursor: pointer;
-            }
-    
-            /* Стиль для кнопки в правому нижньому куті */
-            .music-button {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: transparent;
-                border: none;
-                cursor: pointer;
-            }
-    
-            .music-button img {
-                width: 40px;
-                height: 40px;
-            }
-        </style>
-    </div>
-</div>
+            <!-- </main> -->
 
-<!-- Start menu -->
-<div id="start-menu-modal">
-    <div id="user">
-        <a class="push" href="#"><i class="fas fa-bars"></i></a>
-        <a href="#"><i class="fas fa-user"></i></a>
-        <a href="#"><i class="fas fa-cog"></i></a>
-        <a href="#"><i class="fas fa-power-off"></i></a>
-    </div>
-    <div id="apps">
-        <a class="category" href="#">&</a>
-        <a href="#"><img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/access.png" alt="access"> <span>Access</span></a>
-        <a href="#"><img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/sublime-text.png" alt="sublime"> <span>Sublime text 3</span></a>
-    </div>
-    <div id="others">
-        <div class="title-others">
-            Office 365
-        </div>
-        <div class="box-others">
-            <div class="box">
-                <img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/word.png" alt="">
-                <span>Word</span>
+            <audio id="startup-music" src="music.mp3" loop></audio>
+
+            <button id="toggle-music" class="music-button">
+               <p id="vol">volume 100</p>
+
+               <!-- <img src="speaker.png" alt="Speaker Icon" id="speaker-icon"> Заміна іконки -->
+            </button>
+         </div>
+      </div>
+
+      <!-- Deepseek Window -->
+      <div class="chrome" id="deepseek-pop-up">
+         <div class="pop-up">
+            <!-- Taskbar chrome-->
+            <!-- Top -->
+            <div class="chrome-top">
+               <div class="chrome-tabs">
+                  <div class="triangle"></div>
+                  <div class="tabs">
+                     <span class="icons-tabs">
+                        <i class="fab fa-codepen"></i>
+                     </span>
+                     <span class="text-tabs">Deepseek</span>
+                     <span class="close-tabs">x</span>
+                  </div>
+                  <div class="triangle-2"></div>
+                  <div class="new-tabs"></div>
+               </div>
+               <div class="chrome-close">
+                  <a href="#"><i class="fas fa-minus"></i></a>
+                  <a href="#"><i class="far fa-window-restore"></i></a>
+                  <a href="#"><i class="fas fa-times"></i></a>
+               </div>
             </div>
-            <div class="box">
-                <img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/excel.png" alt="">
-                <span>Excel</span>
+            <!-- Bottom -->
+            <div class="chrome-bottom">
+               <div class="options-bar">
+                  <div class="icons-bar">
+                     <div class="arrows">
+                        <a href="#"><i class="fas fa-arrow-left"></i></a>
+                        <a href="#"><i class="fas fa-arrow-right"></i></a>
+                        <a href="#"><i class="fas fa-sync"></i></a>
+                     </div>
+                     <div class="search-bar">
+                        <span class="info"
+                           ><i class="fas fa-lock"></i> Securised</span
+                        >
+                        <input
+                           type="text"
+                           value="https://www.deepseek.com/"
+                           readonly
+                        />
+                        <span class="star"><i class="far fa-star"></i></span>
+                     </div>
+                     <div class="points-bar">
+                        <div class="points">
+                           <span>•</span>
+                           <span>•</span>
+                           <span>•</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-            <div class="box">
-                <img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/powerpoint.png" alt="">
-                <span>Powerpoint</span>
+
+            <!-- Deepseek iframe -->
+            <div style="width: 100%; height: calc(100vh - 110px)">
+               <iframe
+                  src="https://www.deepseek.com/"
+                  style="width: 100%; height: 100%; border: none"
+               ></iframe>
             </div>
-            <div class="box">
-                <img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/outlook.png" alt="">
-                <span>Outlook</span>
+         </div>
+      </div>
+
+      <!-- Start menu -->
+      <div id="start-menu-modal">
+         <div id="user">
+            <a class="push" href="#"><i class="fas fa-bars"></i></a>
+            <a href="#"><i class="fas fa-user"></i></a>
+            <a href="#"><i class="fas fa-cog"></i></a>
+            <a href="#"><i class="fas fa-power-off"></i></a>
+         </div>
+         <div id="apps">
+            <a class="category" href="#">&</a>
+            <a href="#"
+               ><img
+                  src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/access.png"
+                  alt="access"
+               />
+               <span>Access</span></a
+            >
+            <a href="#"
+               ><img
+                  src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/sublime-text.png"
+                  alt="sublime"
+               />
+               <span>Sublime text 3</span></a
+            >
+         </div>
+         <div id="others">
+            <div class="title-others">Office 365</div>
+            <div class="box-others">
+               <div class="box">
+                  <img
+                     src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/word.png"
+                     alt=""
+                  />
+                  <span>Word</span>
+               </div>
+               <div class="box">
+                  <img
+                     src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/excel.png"
+                     alt=""
+                  />
+                  <span>Excel</span>
+               </div>
+               <div class="box">
+                  <img
+                     src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/powerpoint.png"
+                     alt=""
+                  />
+                  <span>Powerpoint</span>
+               </div>
+               <div class="box">
+                  <img
+                     src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/outlook.png"
+                     alt=""
+                  />
+                  <span>Outlook</span>
+               </div>
+               <div class="box">
+                  <img
+                     src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/publisher.png"
+                     alt=""
+                  />
+                  <span>Publisher</span>
+               </div>
+               <div class="box">
+                  <img
+                     src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/onenote.png"
+                     alt=""
+                  />
+                  <span>OneNote</span>
+               </div>
             </div>
-            <div class="box">
-                <img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/publisher.png" alt="">
-                <span>Publisher</span>
+         </div>
+      </div>
+
+      <!-- Додаємо після desktop div -->
+      <div class="search-window" id="search-window">
+         <div class="search-container">
+            <div class="search-header">
+               <span>Search</span>
+               <a href="#" class="close-search">×</a>
             </div>
-            <div class="box">
-                <img src="https://raw.githubusercontent.com/gcazin/pure-css-windows-10-desktop/master/icons/onenote.png" alt="">
-                <span>OneNote</span>
+            <div class="search-input-container">
+               <input
+                  type="text"
+                  placeholder="Type here to search"
+                  class="search-input"
+               />
+               <i class="fas fa-search search-icon"></i>
             </div>
-        </div>
-    </div>
-</div>
-</body>
+         </div>
+      </div>
+
+      <script>
+         // Функція закриття вікон Chrome
+         function setupCloseHandlers() {
+            document.querySelectorAll('.close-tabs').forEach((closeTab) => {
+               closeTab.addEventListener('click', function () {
+                  window.location.href = '#';
+               });
+            });
+         }
+
+         // Викликаємо функцію одразу
+         setupCloseHandlers();
+
+         // Додаємо обробник для динамічно доданих елементів
+         document.addEventListener('DOMContentLoaded', setupCloseHandlers);
+
+         // Показати модальне вікно при завантаженні сторінки
+         window.onload = function () {
+            const startupModal = document.getElementById('startup-modal');
+            startupModal.style.display = 'flex';
+
+            const startupButton = document.getElementById('startup-button');
+            const audio = document.getElementById('startup-music');
+
+            startupButton.addEventListener('click', function () {
+               startupModal.style.display = 'none';
+               audio.play().catch((err) => {
+                  console.error('Failed to play audio:', err);
+               });
+            });
+         };
+
+         // Кнопка для ввімкнення/вимкнення музики
+         const toggleMusicButton = document.getElementById('toggle-music');
+         const audio = document.getElementById('startup-music');
+         const vol = document.getElementById('vol');
+
+         toggleMusicButton.addEventListener('click', function () {
+            if (audio.paused) {
+               audio.play();
+               vol.textContent = 'volume 100';
+            } else {
+               audio.pause();
+               vol.textContent = 'volume 0';
+            }
+         });
+
+         // Інші існуючі функції
+         document
+            .getElementById('address')
+            .addEventListener('click', function () {
+               document.getElementById('modal').style.display = 'flex';
+            });
+
+         document
+            .getElementById('close-modal')
+            .addEventListener('click', function () {
+               document.getElementById('modal').style.display = 'none';
+            });
+
+         document
+            .getElementById('search-button')
+            .addEventListener('click', function () {
+               document.getElementById('modal').style.display = 'flex';
+            });
+
+         document
+            .getElementById('copy-button')
+            .addEventListener('click', function () {
+               const copyText =
+                  document.getElementById('copy-text').textContent;
+               navigator.clipboard
+                  .writeText(copyText)
+                  .then(() => {
+                     alert('Link copied to clipboard!');
+                  })
+                  .catch((err) => {
+                     console.error('Failed to copy: ', err);
+                  });
+            });
+
+         // Додаємо до існуючого скрипту
+         document
+            .querySelector('#search')
+            .addEventListener('click', function (e) {
+               e.preventDefault();
+               const searchWindow = document.getElementById('search-window');
+               if (searchWindow.style.display === 'block') {
+                  searchWindow.style.display = 'none';
+                  window.location.hash = '';
+               } else {
+                  searchWindow.style.display = 'block';
+                  searchWindow.querySelector('.search-input').focus();
+                  window.location.hash = 'search';
+               }
+            });
+
+         // Закриття пошуку при кліку на close
+         document
+            .querySelector('.close-search')
+            .addEventListener('click', function (e) {
+               e.preventDefault();
+               document.getElementById('search-window').style.display = 'none';
+               window.location.hash = '';
+            });
+      </script>
+   </body>
 </html>

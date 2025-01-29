@@ -62,7 +62,7 @@
   .taskbar .icons-left #folder {
     height: 43px;
     width: 49px;
-    background-image: url("http://www.iconarchive.com/download/i98291/dakirby309/simply-styled/File-Explorer.ico");
+    background-image: url("2.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 21px 21px;
@@ -72,7 +72,7 @@
   .taskbar .icons-left #chrome {
     height: 43px;
     width: 49px;
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Google_Chrome_icon_%28September_2014%29.svg/2048px-Google_Chrome_icon_%28September_2014%29.svg.png");
+    background-image: url("Internet_Explorer_10+11_logo.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 26px 26px;
